@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Trace">
+	<resultMap type="traceInfoVO" id="getTraceInfo">
+		<result property="appId" column="APP_ID" />
+		<result property="appCtn" column="APP_CTN" />
+		<result property="deviceCtn" column="DEVICE_CTN" />
+		<result property="deviceKey" column="DEVICE_KEY" />
+	</resultMap>
+
+	<select id="getTraceInfo" resultMap="getTraceInfo">
+		SELECT 
+			APP_ID,
+			APP_CTN,
+			DEVICE_CTN,
+			DEVICE_KEY
+		FROM TB_PACKET_TRACE_SET 
+	</select>
+</mapper>

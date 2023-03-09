@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	
+	<typeAliases>
+		<!--VO Object Aliases Set Area  -->
+		<typeAlias alias="traceInfoVO" type="com.lgu.common.trace.model.TraceInfoVO" />
+		
+	</typeAliases>
+	
+	<plugins>
+		<plugin interceptor="devonframe.log.trace.interceptor.QueryLoggingInterceptor" />
+		<plugin interceptor="devonframe.paging.interceptor.MyBatisPagingInterceptor" />
+		<plugin interceptor="devonframe.scrollpaging.interceptor.MyBatisScrollPagingInterceptor" />
+	</plugins>			
+</configuration>

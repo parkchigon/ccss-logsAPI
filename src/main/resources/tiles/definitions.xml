@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="popup" template="/WEB-INF/jsp/tiles/layouts/layout-popup.jsp">
+    </definition>
+
+	<definition name="employeePopUp" extends="popup">
+    </definition>
+
+	<definition name="login" template="/WEB-INF/jsp/tiles/layouts/layout-login.jsp">
+        <put-attribute name="content" value="/WEB-INF/jsp/common/loginForm.jsp"/>
+    </definition>
+
+	<definition name="main" template="/WEB-INF/jsp/tiles/layouts/layout-main.jsp">
+	    <put-attribute name="title" value="DevOn Office" />
+        <put-attribute name="header" value="/WEB-INF/jsp/tiles/menu/top.jsp" />
+    	<put-attribute name="content" value="/WEB-INF/jsp/common/main.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/jsp/tiles/menu/footer.jsp" />
+    </definition>
+
+	<definition name="function" template="/WEB-INF/jsp/tiles/layouts/layout.jsp">
+        <put-attribute name="header" value="/WEB-INF/jsp/tiles/menu/top.jsp" />
+        <put-attribute name="left" value="/WEB-INF/jsp/tiles/menu/left.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/pattern/contentFuction.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/jsp/tiles/menu/footer.jsp" />
+    </definition>
+
+	<definition name="uipattern" template="/WEB-INF/jsp/tiles/layouts/layout.jsp">
+        <put-attribute name="header" value="/WEB-INF/jsp/tiles/menu/top.jsp" />
+        <put-attribute name="left" value="/WEB-INF/jsp/tiles/menu/left.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/pattern/p00/employeeList.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/jsp/tiles/menu/footer.jsp" />
+    </definition>
+
+    <definition name="pattern/**/employeeList" extends="uipattern">
+    	<put-attribute name="title" value="Employee List" />
+        <put-attribute name="content" value="/WEB-INF/jsp/pattern/{1}/employeeList.jsp" />
+    </definition>
+
+    <definition name="pattern/**/employeeDetail" extends="uipattern">
+    	<put-attribute name="title" value="Employee Detail" />
+        <put-attribute name="content" value="/WEB-INF/jsp/pattern/{1}/employeeDetail.jsp" />
+    </definition>
+
+    <definition name="pattern/**/employeeForm" extends="uipattern">
+    	<put-attribute name="title" value="Employee Form" />
+        <put-attribute name="content" value="/WEB-INF/jsp/pattern/{1}/employeeForm.jsp" />
+    </definition>
+
+    <definition name="pattern/**/employeeListDetail" extends="uipattern">
+    	<put-attribute name="title" value="Employee List Detail" />
+        <put-attribute name="content" value="/WEB-INF/jsp/pattern/{1}/employeeListDetail.jsp" />
+    </definition>
+
+    <definition name="pattern/**/employeeDetailList" extends="uipattern">
+    	<put-attribute name="title" value="Employee Detail List" />
+        <put-attribute name="content" value="/WEB-INF/jsp/pattern/{1}/employeeDetailList.jsp" />
+    </definition>
+    
+    <definition name="pattern/**/employeeFormPopup" extends="employeePopUp">
+    	<put-attribute name="title" value="EmployeeFormPopup" />
+        <put-attribute name="content" value="/WEB-INF/jsp/pattern/{1}/employeeFormPopup.jsp" />
+    </definition>
+
+    <definition name="function/**/employeeList" extends="function">
+    	<put-attribute name="title" value="Employee List" />
+        <put-attribute name="content" value="/WEB-INF/jsp/function/{1}/employeeList.jsp" />
+    </definition>
+
+    <definition name="function/**/employeeDetail" extends="function">
+    	<put-attribute name="title" value="Employee Detail" />
+        <put-attribute name="content" value="/WEB-INF/jsp/function/{1}/employeeDetail.jsp" />
+    </definition>
+
+    <definition name="function/**/employeeForm" extends="function">
+    	<put-attribute name="title" value="Employee Form" />
+        <put-attribute name="content" value="/WEB-INF/jsp/function/{1}/employeeForm.jsp" />
+    </definition>
+
+    <definition name="function/fileupload/fileUploadForm" extends="function">
+    	<put-attribute name="title" value="fileUpload Form" />
+        <put-attribute name="content" value="/WEB-INF/jsp/function/fileupload/fileUploadForm.jsp" />
+    </definition>
+
+    <definition name="function/filedownload/fileDownloadList" extends="function">
+    	<put-attribute name="title" value="File Download List" />
+        <put-attribute name="content" value="/WEB-INF/jsp/function/filedownload/fileDownloadList.jsp" />
+    </definition>
+
+    <definition name="common/error/*" extends="function">
+    	<put-attribute name="title" value="Error Page" />
+        <put-attribute name="content" value="/WEB-INF/jsp/common/error/{1}.jsp" />
+    </definition>
+
+</tiles-definitions>

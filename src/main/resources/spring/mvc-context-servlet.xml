@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:component-scan base-package="com.lgu">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Repository" />
+	</context:component-scan>
+
+	<!-- <bean id="ctrLog" class="devonframe.log.trace.aspect.CtlTraceLogAspect"> 
+		<property name="limitedCount" value="1"/> <property name="enabled" value="false"/> 
+		<property name="prefix" value="ContrllerLog"/> -->
+	<!-- <property name="excludeParamList"> <list> <value>com.lgu.ccss.uipattern.employee.model.Employee</value> 
+		<value>devonframe.log.trace.Trace</value> </list> </property> -->
+	<!-- </bean> -->
+
+	<bean id="beanRefreshManager" class="devonframe.refresh.BeanRefreshManager" />
+
+	<bean name="/admin/refreshController.do" class="devonframe.refresh.controller.BeanRefreshController">
+		<property name="beanRefreshManager" ref="beanRefreshManager" />
+	</bean>
+
+	<mvc:annotation-driven>
+		<mvc:argument-resolvers>
+			<bean class="devonframe.paging.resolver.PagingMethodArgumentResolver">
+				<property name="pagingPolicyResolver" ref="pagingPolicyResolver" />
+			</bean>
+			<bean
+				class="devonframe.scrollpaging.resolver.ScrollPagingMethodArgumentResolver">
+				<property name="scrollPagingPolicyResolver" ref="scrollPagingPolicyResolver" />
+			</bean>
+			<bean
+				class="devonframe.web.servlet.resolver.CollectionMethodArgumentResolver" />
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+
+	<bean id="pagingPolicyResolver" class="devonframe.paging.policy.PagingPolicyResolver">
+		<property name="globalPolicy" ref="paging.globalPolicy" />
+		<property name="optionalPolicyMap">
+			<map>
+				<entry key="policy1" value-ref="paging.policy1" />
+				<entry key="policy2" value-ref="paging.policy2" />
+			</map>
+		</property>
+	</bean>
+
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="lang" />
+		</bean>
+		<!-- <mvc:interceptor> -->
+		<!-- <mvc:mapping path="/**"/> -->
+		<!-- <bean id="loginCheckInterceptor" class="com.lgu.ccss.common.login.interceptor.LoginCheckInterceptor"> -->
+		<!-- <property name="skipUrls"> -->
+		<!-- <list> -->
+		<!-- <value>/common/login/retrieveLoginForm.do</value> -->
+		<!-- <value>/common/login/login.do</value> -->
+		<!-- </list> -->
+		<!-- </property> -->
+		<!-- </bean> -->
+		<!-- </mvc:interceptor> -->
+
+
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean id="savedTokenInterceptor"
+				class="devonframe.savedtoken.interceptor.SavedTokenInterceptor">
+				<property name="applyUrls">
+					<list>
+						<value>/function/webmvc/savedtoken/updateEmployee.do</value>
+						<value>/function/webmvc/savedtoken/insertEmployee.do</value>
+						<value>/function/webmvc/savedtoken/deleteEmployee.do</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+
+
+		<!--Sample Intorcetor 영역 -->
+		<!-- <mvc:interceptor> <mvc:mapping path="/**"/> <bean id="sampleInterceptor" 
+			class="com.lgu.ccss.sample.interceptor.SampleInterceptor"> <property name="applyUrls"> 
+			<list> <value>/sample/dbConnCheck.do</value> </list> </property> </bean> 
+			</mvc:interceptor> -->
+
+		<!-- Request Interceptor -->
+		<mvc:interceptor>
+			<mvc:mapping path="/api/**" />
+			<mvc:mapping path="/api/interapi/**" />
+			<bean class="com.lgu.ccss.common.interceptor.RequestInterceptor" />
+		</mvc:interceptor>
+
+	</mvc:interceptors>
+
+	<!-- <bean id="simpleUrlHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" 
+		p:order="3"> <property name="mappings"> <props> <prop key="/pattern/contentUiPattern.do">urlFilenameViewController</prop> 
+		<prop key="/function/contentFunction.do">urlFilenameViewController</prop> 
+		</props> </property> </bean> <bean id="urlFilenameViewController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" 
+		/> -->
+
+	<!-- ExceptionResolver 설정 -->
+	<bean
+		class="devonframe.exception.handler.SimpleHeaderMappingExceptionResolver"
+		p:order="1">
+		<property name="headerName" value="X-Requested-With" />
+		<property name="headerValues" value="XMLHttpRequest" />
+		<property name="errorView" value="ajaxErrorView" />
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
+		p:order="2">
+		<property name="warnLogCategory" value="errorLogger" />
+		<property name="exceptionMappings">
+			<props>
+				<prop key="devonframe.exception.BusinessException">common/error/errorBusiness</prop>
+				<prop key="devonframe.exception.SystemException">common/error/errorSystem</prop>
+			</props>
+		</property>
+		<property name="defaultErrorView" value="common/error/error" />
+	</bean>
+
+	<!-- <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"> 
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView" 
+		/> <property name="order" value="2" /> </bean> -->
+
+	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver" 
+		p:viewClass="org.springframework.web.servlet.view.JstlView" p:prefix="/WEB-INF/jsp/" 
+		p:suffix=".jsp" p:order="3" /> -->
+
+	<mvc:resources mapping="/favicon.ico" location="/favicon.ico" />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/css/**" location="/resources/css/" />
+	<mvc:resources mapping="/js/**" location="/resources/js/" />
+	<mvc:resources mapping="/images/**" location="/resources/images/" />
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="2" />
+	</bean>
+
+	<bean id="beanNameViewResolver"
+		class="org.springframework.web.servlet.view.BeanNameViewResolver"
+		p:order="1" />
+
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+
+	<!-- <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer"> 
+		<property name="definitions"> <list> <value>classpath:tiles/definitions.xml</value> 
+		</list> </property> </bean> -->
+
+	<!-- ajaxView설정 -->
+	<bean id="ajaxView"
+		class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+
+	<!-- 1Depth의 json문자열을 리턴하기위한 View설정 -->
+	<bean id="singleJsonView"
+		class="com.lgu.ccss.common.view.SingleJsonListMappingJacksonJsonView" />
+
+	<!-- ajaxErrorView설정 -->
+	<bean id="ajaxErrorView" class="com.lgu.ccss.common.view.AjaxExceptionView" />
+
+
+	<!-- Rescives View Media Type -->
+	<!-- <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"> 
+		<property name="mediaTypes"> <map> <entry key="do" value="text/html"/> <entry 
+		key="json" value="application/json"/> <beans:entry key="xml" value="application/xml"/> 
+		</map> </property> </bean> -->
+
+	<!-- json converter -->
+	<!-- <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/> 
+		<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> 
+		<property name="messageConverters"> <list> <ref bean="jacksonMessageConverter"/> 
+		</list> </property> </bean> -->
+
+</beans>

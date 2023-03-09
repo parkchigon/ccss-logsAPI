@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+	<property name="SERVER_NM" value="${SERVER_NAME}" />
+	<property name="LOGS_ABSOLUTE_PATH" value="/logs/ccsp/log_api" />
+	<property name="LOGS_API_TLO_PATH" value="/logs/ccsp/api_tlo" />	
+	<property name="HANG_LOG_DIR" value="/logs/ccsp/log_api/hang" />
+	
+	<property name="LOGS_SERVICELOG_PATH" value="/ccss_logs/service_log" />
+	<property name="LOGS_SERVICELOG_ERR_PATH" value="/ccss_logs/error_log/service_log" />
+	<property name="LOGS_BDP_PATH" value="/ccss_logs/bdp_log" />
+	<property name="LOGS_ES_PATH" value="/ccss_logs/es_log" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}][%thread][%-5level][%logger{36}] - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="logApiRolling"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5p] [%t] [%logger{0}.%method] %line - %msg%n</pattern>
+		</encoder>		
+<!-- 		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level
+				%logger{35} - %msg%n</pattern>
+		</encoder> -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOGS_ABSOLUTE_PATH}/log_api.${WAS_ID}.%d{yyyyMMdd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>100</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="tloRolling"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOGS_API_TLO_PATH}/%d{yyyyMMdd,aux}/API_TLO.${WAS_ID}.%d{yyyyMMddHHmm}.log</fileNamePattern>
+			<maxHistory>70</maxHistory>
+		</rollingPolicy>
+		<encoder>
+		    <pattern>%msg%n</pattern>
+		</encoder>
+	</appender>	
+
+	<appender name="hangRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${HANG_LOG_DIR}/log_api.${WAS_ID}.%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>170</maxHistory>
+        </rollingPolicy>  
+        <encoder>
+            <Pattern>%d{yyyy:MM:dd HH:mm:ss} %msg%n</Pattern>
+        </encoder>
+    </appender>	
+
+
+	<appender name="serviceLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	  	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_SERVICELOG_PATH}/%d{yyyyMMdd,aux}/service_${SERVER_NM}.%d{yyyyMMddHH}.log</fileNamePattern>
+            <maxHistory>8760</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+	</appender>
+	
+
+	<appender name="serviceErrLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %msg%n</pattern>
+		</encoder>
+	  	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_SERVICELOG_ERR_PATH}/service_${SERVER_NM}_err.%d{yyyyMMdd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+	</appender>
+	
+	<appender name="bdpLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	  	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_BDP_PATH}/%d{yyyyMMdd,aux}/bdp_${SERVER_NM}.%d{yyyyMMddHHmm}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>1MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>50000</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+	</appender>
+	
+	<appender name="esLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	  	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_ES_PATH}/%d{yyyyMMdd,aux}/es_${SERVER_NM}.%d{yyyyMMddHHmm}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>1MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>50000</maxHistory>
+        </rollingPolicy>  
+        <encoder>
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+	</appender>
+	
+	
+	<Logger name="org.springframework" level="info" additivity="false">
+		<Appender-Ref ref="logApiRolling" />
+		<Appender-Ref ref="STDOUT" />
+	</Logger>
+
+
+	<!-- TraceLog -->
+	<Logger name="devonframe.log.trace.aspect" level="trace" additivity="false">
+		<Appender-Ref ref="logApiRolling" />
+		<Appender-Ref ref="STDOUT" />
+	</Logger>
+
+  	<Logger name="com.lgu" level="debug" additivity="false">
+		<Appender-Ref ref="logApiRolling" />
+		<Appender-Ref ref="STDOUT" />
+	</Logger>
+	
+ 	<Logger name="HANGLogger" level="debug" additivity="false">
+		<Appender-Ref ref="hangRolling" />
+	</Logger>
+	
+ 	<Logger name="tracelogger" level="debug" additivity="false">
+		<Appender-Ref ref="logApiRolling" />
+		<Appender-Ref ref="STDOUT" />
+	</Logger>
+
+
+	<!-- Important!! Don't touch! -->
+	<Logger name="serviceLoglogger" level="trace" additivity="false">
+		<Appender-Ref ref="serviceLog" />
+		<!-- <Appender-Ref ref="STDOUT" /> -->
+	</Logger>
+	
+	<!-- Important!! Don't touch! -->
+	<Logger name="serviceErrLoglogger" level="trace" additivity="false">
+		<Appender-Ref ref="serviceErrLog" />
+	<!-- 	<Appender-Ref ref="STDOUT" /> -->
+	</Logger>
+	
+	<!-- Important!! Don't touch! -->
+	<Logger name="bdpLoglogger" level="trace" additivity="false">
+		<Appender-Ref ref="bdpLog" />
+		<!-- <Appender-Ref ref="STDOUT" /> -->
+	</Logger>
+	
+	<!-- Important!! Don't touch! -->
+	<Logger name="esLoglogger" level="trace" additivity="false">
+		<Appender-Ref ref="esLog" />
+		<!-- <Appender-Ref ref="STDOUT" /> -->
+	</Logger>
+
+	<Root level="error">
+		<Appender-Ref ref="logApiRolling" />
+		<Appender-Ref ref="STDOUT" />
+	</Root>	
+
+
+</configuration>

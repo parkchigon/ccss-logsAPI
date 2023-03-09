@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<context:component-scan base-package="com.lgu">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+
+	<!-- 환경설정 정보 -->
+	<util:properties id="config"
+		location="classpath:/config/${spring.profiles.active}/config.properties" />
+		
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:config/*.properties" />
+		<property name="fileEncoding" value="UTF-8" />
+	</bean>
+
+
+	<!-- Message File을 이용한 메세지 관리 -->
+	<!-- <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"> 
+		<property name="basenames"> <list> <value>classpath:/message/message-common</value> 
+		<value>classpath:/message/message-office</value> <value>classpath:/message/message-validator</value> 
+		</list> </property> <property name="cacheSeconds" value="60" /> <property 
+		name="defaultEncoding" value="UTF-8" /> </bean> <bean id="messageSourceAccessor" 
+		class="org.springframework.context.support.MessageSourceAccessor"> <constructor-arg><ref 
+		bean="messageSource"/></constructor-arg> </bean> -->
+
+	<task:scheduler id="maintenanceTask" pool-size="10" />
+	<task:executor id="maintenanceExec" pool-size="10" />
+	<task:annotation-driven executor="maintenanceExec"
+		scheduler="maintenanceTask" />
+
+</beans>

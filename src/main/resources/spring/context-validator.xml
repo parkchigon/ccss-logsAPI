@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Apache Commons Validator 사용시 -->
+	<bean id="validatorFactory" class="org.springmodules.validation.commons.DefaultValidatorFactory">  
+		<property name="validationConfigLocations"> 
+			<list>
+				<value>classpath:validator/validator-rules.xml</value>
+				<value>classpath:validator/validator-beans.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="commonsValidator" class="devonframe.validator.commons.BeanValidator">
+	    <property name="validatorFactory" ref="validatorFactory"/>
+	</bean>
+	
+	<!-- Java Bean Validator 사용시 -->
+	<bean id="beanValidator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="validationMessageSource" ref="messageSource"/>
+	</bean>
+
+</beans>
